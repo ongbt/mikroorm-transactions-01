@@ -1,0 +1,37 @@
+#---------------------------------------------
+# User 
+#---------------------------------------------
+GET http://localhost:3000/api/users HTTP/1.1
+content-type: application/json
+###
+
+POST http://localhost:3000/api/users HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Name-01",
+    "email": "name01@email.com"
+}
+###
+
+
+#---------------------------------------------
+# Order 
+#---------------------------------------------#
+GET http://localhost:3000/api/orders HTTP/1.1
+content-type: application/json
+
+###
+POST http://localhost:3000/api/orders HTTP/1.1
+content-type: application/json
+
+{
+    "productId": "Product-01",
+    "amount": 99.5
+}
+###
+
+#---------------------------------------------
+# Payment 
+#---------------------------------------------#
+ 
