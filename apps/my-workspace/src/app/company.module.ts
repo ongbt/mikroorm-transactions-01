@@ -7,6 +7,7 @@ import { User } from './entities/user.entity';
 import { OrderController } from './order/order.controller';
 import { OrderRepository } from './order/order.repository';
 import { OrderService } from './order/order.service';
+import { TransactionService } from './order/transaction.service';
 import { PaymentRepository } from './payment/payment.repository';
 import { PaymentService } from './payment/payment.service';
 import { UserController } from './user/user.controller';
@@ -25,6 +26,7 @@ export const ENTITY_REGISTRY = [User, Order, Payment];
     OrderRepository,
     PaymentService,
     PaymentRepository,
+    TransactionService,
   ],
 })
 export class CompanyModule {}

@@ -1,11 +1,23 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { Order } from '../entities/order.entity';
 import { OrderService } from './order.service';
+import { TransactionService } from './transaction.service';
 
 @Controller('orders')
 export class OrderController {
-  constructor(private readonly orderService: OrderService) {}
-
+  constructor(
+    private readonly orderService: OrderService,
+    private readonly transactionService: TransactionService
+  ) {}
+  @Post('transactions')
+  async createTransaction(
+    @Body() body: { productId: string; amount: number }
+  ): Promise<Order> {
+    return this.transactionService.createOrderWithPayment(
+      body.productId,
+      body.amount
+    );
+  }
   @Post()
   async create(
     @Body() body: { productId: string; amount: number }
