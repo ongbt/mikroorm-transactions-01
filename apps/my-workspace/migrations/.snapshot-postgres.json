@@ -27,12 +27,14 @@
         },
         "amount": {
           "name": "amount",
-          "type": "int",
+          "type": "numeric(8,2)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "integer"
+          "precision": 8,
+          "scale": 2,
+          "mappedType": "decimal"
         }
       },
       "name": "order",
@@ -66,12 +68,14 @@
         },
         "amount": {
           "name": "amount",
-          "type": "int",
+          "type": "numeric(8,2)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "integer"
+          "precision": 8,
+          "scale": 2,
+          "mappedType": "decimal"
         }
       },
       "name": "payment",

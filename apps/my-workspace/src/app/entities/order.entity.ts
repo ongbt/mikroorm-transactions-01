@@ -8,6 +8,6 @@ export class Order {
   @Property()
   productId!: string;
 
-  @Property()
+  @Property({ columnType: 'numeric(8,2)' })
   amount!: number;
 }

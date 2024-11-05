@@ -13,14 +13,26 @@ export class OrderService {
   ) {}
 
   async createOrder(productId: string, amount: number): Promise<Order> {
-    const user = this.orderRepository.create({ productId, amount });
-    await this.em.persistAndFlush(user);
-    return user;
+    const order = this.orderRepository.create({ productId, amount });
+    await this.em.persistAndFlush(order);
+    return order;
   }
-
+  async updateOrder(
+    id: number,
+    productId: string,
+    amount: number
+  ): Promise<Order> {
+    const order = await this.orderRepository.findOneOrFail(id);
+    order.productId = productId;
+    order.amount = amount;
+    await this.em.flush();
+    return order;
+  }
   async findAll(): Promise<Order[]> {
     return this.orderRepository.findAll();
   }
-
+  async findOne(id: number): Promise<Order> {
+    return this.orderRepository.findOneOrFail(id);
+  }
   // Additional methods can be added here for update and delete operations.
 }

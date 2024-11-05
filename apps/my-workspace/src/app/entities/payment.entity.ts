@@ -5,6 +5,6 @@ export class Payment {
   @PrimaryKey()
   id!: number;
 
-  @Property()
+  @Property({ columnType: 'numeric(8,2)' })
   amount!: number;
 }

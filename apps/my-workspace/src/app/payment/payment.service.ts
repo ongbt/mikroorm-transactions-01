@@ -13,9 +13,9 @@ export class PaymentService {
   ) {}
 
   async createPayment(amount: number): Promise<Payment> {
-    const user = this.paymentRepository.create({ amount });
-    await this.em.persistAndFlush(user);
-    return user;
+    const payment = this.paymentRepository.create({ amount });
+    await this.em.persistAndFlush(payment);
+    return payment;
   }
 
   async findAll(): Promise<Payment[]> {
