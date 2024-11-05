@@ -1,3 +1,13 @@
+
+npx mikro-orm migration:create --initial
+npx mikro-orm migration:create
+npx mikro-orm migration:up
+
+
+pnpm exec nx run my-workspace:build
+
+pnpm exec nx run my-workspace:serve                              
+
 # MyWorkspace
 
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
