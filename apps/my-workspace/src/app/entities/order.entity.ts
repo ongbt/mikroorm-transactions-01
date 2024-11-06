@@ -1,10 +1,9 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import { Check, Entity, Property } from '@mikro-orm/core';
+import { AuditableEntity } from './base.entity';
 
 @Entity()
-export class Order {
-  @PrimaryKey()
-  id!: number;
-
+@Check({ expression: 'amount > 0' })
+export class Order extends AuditableEntity {
   @Property()
   productId!: string;
 

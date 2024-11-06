@@ -1,10 +1,9 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import { Check, Entity, Property } from '@mikro-orm/core';
+import { AuditableEntity } from './base.entity';
 
 @Entity()
-export class User {
-  @PrimaryKey()
-  id!: number;
-
+@Check({ expression: 'char_length(email) > 0' }) // Ensure length is greater than 0
+export class User extends AuditableEntity {
   @Property()
   name!: string;
 

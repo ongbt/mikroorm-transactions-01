@@ -21,12 +21,15 @@ export class TransactionService {
     productId: string,
     amount: number
   ): Promise<Order> {
+    await this.orderService.createOrder(productId + 'a', amount + 10000);
+    await this.orderService.updateOrder(2, productId + 'b', amount + 10000);
     return await this.em.transactional(async () => {
       // Use the same entity manager instance for both services
       const order = await this.orderService.createOrder(productId, amount);
       await this.paymentService.createPayment(amount);
       return order;
     });
+    this.em.flush();
   }
   async createUserWithOrderAndPayment(
     name: string,
