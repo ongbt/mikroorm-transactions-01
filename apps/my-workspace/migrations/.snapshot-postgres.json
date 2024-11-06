@@ -313,8 +313,8 @@
       "checks": [
         {
           "name": "user_check",
-          "expression": "char_length(email) > 0",
-          "definition": "check ((char_length(email) > 0))"
+          "expression": "char_length(email) > 0 and char_length(email) < 20",
+          "definition": "check ((char_length(email) > 0 and char_length(email) < 20))"
         }
       ],
       "foreignKeys": {},

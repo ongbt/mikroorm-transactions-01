@@ -24,6 +24,7 @@ export class OrderService {
     amount: number
   ): Promise<Order> {
     const order = await this.orderRepository.findOneOrFail(id);
+    // console.log('order: ', order);
     order.productId = productId;
     order.amount = amount;
     await this.em.flush();
