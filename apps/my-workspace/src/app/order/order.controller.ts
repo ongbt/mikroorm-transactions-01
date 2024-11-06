@@ -9,12 +9,21 @@ export class OrderController {
     private readonly orderService: OrderService,
     private readonly transactionService: TransactionService
   ) {}
-  @Post('transactions')
-  async createTransaction(
+
+  async createTransactionWithUpdate_Ignore(
     @Body() body: { orderId: number; productId: string; amount: number }
   ): Promise<Order> {
     return this.transactionService.createAndUpdateOrderWithPayment(
       body.orderId,
+      body.productId,
+      body.amount
+    );
+  }
+  @Post('transactions')
+  async createTransaction(
+    @Body() body: { productId: string; amount: number }
+  ): Promise<Order> {
+    return this.transactionService.createOrderWithPayment(
       body.productId,
       body.amount
     );

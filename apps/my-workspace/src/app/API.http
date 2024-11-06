@@ -22,7 +22,7 @@ GET http://localhost:3000/api/orders HTTP/1.1
 content-type: application/json
 ###
 
-GET http://localhost:3000/api/orders/1 HTTP/1.1
+GET http://localhost:3000/api/orders/53 HTTP/1.1
 content-type: application/json
 ###
 
@@ -36,7 +36,7 @@ content-type: application/json
 }
 ###
 // updateOrder
-POST http://localhost:3000/api/orders/19 HTTP/1.1
+POST http://localhost:3000/api/orders/53 HTTP/1.1
 content-type: application/json
 
 {
@@ -64,7 +64,7 @@ content-type: application/json
 {
     "orderId": 53,
     "productId": "Product-11",
-    "amount": 2.5
+    "amount": 22.5
 }
 ###
 // createUserWithOrderAndPayment
