@@ -1,5 +1,5 @@
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { EnsureRequestContext, EntityManager } from '@mikro-orm/postgresql';
+import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 import { Order } from '../entities/order.entity';
 import { OrderRepository } from './order.repository';
@@ -17,7 +17,6 @@ export class OrderService {
     await this.em.persistAndFlush(order);
     return order;
   }
-  @EnsureRequestContext()
   async updateOrder(
     id: number,
     productId: string,

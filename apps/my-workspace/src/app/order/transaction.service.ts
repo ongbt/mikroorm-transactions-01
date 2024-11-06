@@ -44,21 +44,24 @@ export class TransactionService {
    * [query] commit
    *
    */
-  async createUserWithOrderAndPayment_WithCreateUpdate(
-    name: string,
-    email: string,
+  async createAndUpdateOrderWithPayment(
+    orderId: number,
     productId: string,
     amount: number
-  ): Promise<User> {
-    return await this.em.transactional(async () => {
-      await this.orderService.createOrder(productId + 'a', amount + 10000);
-      await this.orderService.updateOrder(19, productId + 'b', amount + 10000);
-      // Use the same entity manager instance for both services
-      const user = await this.userService.createUser(name, email);
-      await this.createOrderWithPayment(productId, amount);
-
-      return user;
+  ): Promise<Order> {
+    await this.orderService.createOrder(productId + 'a', amount + 10000);
+    await this.orderService.updateOrder(
+      orderId,
+      productId + 'b',
+      amount + 10000
+    );
+    const order = await this.em.transactional(async () => {
+      const order = await this.orderService.createOrder(productId, amount);
+      await this.paymentService.createPayment(amount);
+      return order;
     });
+    this.em.flush();
+    return order;
   }
 
   /**

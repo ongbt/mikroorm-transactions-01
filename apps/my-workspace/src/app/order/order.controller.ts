@@ -11,9 +11,10 @@ export class OrderController {
   ) {}
   @Post('transactions')
   async createTransaction(
-    @Body() body: { productId: string; amount: number }
+    @Body() body: { orderId: number; productId: string; amount: number }
   ): Promise<Order> {
-    return this.transactionService.createOrderWithPayment(
+    return this.transactionService.createAndUpdateOrderWithPayment(
+      body.orderId,
       body.productId,
       body.amount
     );
