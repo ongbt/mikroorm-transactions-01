@@ -22,7 +22,7 @@ GET http://localhost:3000/api/orders HTTP/1.1
 content-type: application/json
 ###
 
-GET http://localhost:3000/api/orders/53 HTTP/1.1
+GET http://localhost:3000/api/orders/186 HTTP/1.1
 content-type: application/json
 ###
 
@@ -36,12 +36,12 @@ content-type: application/json
 }
 ###
 // updateOrder
-POST http://localhost:3000/api/orders/53 HTTP/1.1
+POST http://localhost:3000/api/orders/186 HTTP/1.1
 content-type: application/json
 
 {
     "productId": "Product-02",
-    "amount": 1.5
+    "amount": 32.5
 }
 ###
 
@@ -75,6 +75,6 @@ content-type: application/json
     "name": "Name-11",
     "email": "name11@email.com",
     "productId": "Product-12",
-    "amount": 122345.5
+    "amount": -22345.5
 }
 ###
