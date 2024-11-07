@@ -106,8 +106,8 @@
       "checks": [
         {
           "name": "order_check",
-          "expression": "amount > 0",
-          "definition": "check ((amount > 0))"
+          "expression": "amount >= 0",
+          "definition": "check ((amount >= 0))"
         }
       ],
       "foreignKeys": {},

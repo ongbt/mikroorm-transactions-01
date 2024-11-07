@@ -2,7 +2,7 @@ import { Check, Entity, Property } from '@mikro-orm/core';
 import { AuditableEntity } from './base.entity';
 
 @Entity()
-@Check({ expression: 'amount > 0' })
+@Check({ expression: 'amount >= 0' })
 export class Order extends AuditableEntity {
   @Property()
   productId!: string;
