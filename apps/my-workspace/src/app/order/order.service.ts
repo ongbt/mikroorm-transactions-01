@@ -22,12 +22,13 @@ export class OrderService {
     productId: string,
     amount: number
   ): Promise<Order> {
-    const order = await this.orderRepository.findOneOrFail(id);
-    // console.log('order: ', order);
-    order.productId = productId;
-    order.amount = amount;
-    await this.em.flush();
-    return order;
+    return await this.em.transactional(async (inner) => {
+      const order = await this.orderRepository.findOneOrFail(id);
+      order.productId = productId;
+      order.amount = amount;
+      await inner.flush();
+      return order;
+    });
   }
   async findAll(): Promise<Order[]> {
     return this.orderRepository.findAll();

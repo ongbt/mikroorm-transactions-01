@@ -64,7 +64,7 @@ content-type: application/json
 {
     "orderId": 53,
     "productId": "Product-11",
-    "amount": 22345
+    "amount": 122345
 }
 ###
 // createUserWithOrderAndPayment
@@ -75,6 +75,6 @@ content-type: application/json
     "name": "Name-11",
     "email": "name11@email.com",
     "productId": "Product-12",
-    "amount": 2149.5
+    "amount": 122345.5
 }
 ###
