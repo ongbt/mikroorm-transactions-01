@@ -57,14 +57,14 @@ content-type: application/json
     "amount": 2.5
 }
 ###
-// createAndUpdateOrderWithPayment
+// createOrderWithPayment
 POST http://localhost:3000/api/orders/transactions HTTP/1.1
 content-type: application/json
 
 {
     "orderId": 53,
     "productId": "Product-11",
-    "amount": 22.5
+    "amount": 22345
 }
 ###
 // createUserWithOrderAndPayment

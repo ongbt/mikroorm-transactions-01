@@ -25,6 +25,9 @@ export class TransactionService {
       // Use the same entity manager instance for both services
       const order = await this.orderService.createOrder(productId, amount);
       await this.paymentService.createPayment(amount);
+      if (amount > 99999) {
+        await this.em.rollback(); // impt to have 'await', else error 'Transaction query already complete, run with DEBUG=knex:tx'
+      }
       return order;
     });
     this.em.flush();
@@ -55,9 +58,10 @@ export class TransactionService {
       productId + 'b',
       amount + 10000
     );
-    const order = await this.em.transactional(async () => {
+    const order = await this.em.transactional(async (em) => {
       const order = await this.orderService.createOrder(productId, amount);
       await this.paymentService.createPayment(amount);
+
       return order;
     });
     this.em.flush();
