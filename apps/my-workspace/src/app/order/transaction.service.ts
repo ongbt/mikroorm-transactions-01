@@ -175,6 +175,50 @@ export class TransactionService {
     });
   }
 
+  /**
+   * Notes:
+   * Create user + order+payment, but order+payment is optional (create user should commit regardless if order+payment succeeds)
+   *
+   * If all succeed:
+   * [query] begin
+   * [query] insert into "user" ("created_by", "created_at", "updated_by", "updated_at", "name", "email") values ('Admin', '2024-11-13T09:47:02.313Z', 'Admin', '2024-11-13T09:47:02.313Z', 'Name-11', 'name11@email.com') returning "id", "version" [took 2 ms, 1 row affected]
+   * [query] savepoint trx4
+   * [query] insert into "order" ("created_by", "created_at", "updated_by", "updated_at", "product_id", "amount") values ('Admin', '2024-11-13T09:47:02.322Z', 'Admin', '2024-11-13T09:47:02.322Z', 'Product-12', 2345.5) returning "id", "version" [took 3 ms, 1 row affected]
+   * [query] insert into "payment" ("created_by", "created_at", "updated_by", "updated_at", "amount") values ('Admin', '2024-11-13T09:47:02.328Z', 'Admin', '2024-11-13T09:47:02.328Z', 2345.5) returning "id", "version" [took 3 ms, 1 row affected]
+   * [query] release savepoint trx4
+   * [query] commit
+   *
+   * If createUser fails:
+   * [query] begin
+   * [query] insert into "user" ("created_by", "created_at", "updated_by", "updated_at", "name", "email") values ('Admin', '2024-11-13T09:45:30.698Z', 'Admin', '2024-11-13T09:45:30.698Z', 'Name-11', '') returning "id", "version" [took 4 ms]
+   * [query] rollback
+   *
+   * If createOrderWithPayment fails:
+   * [query] begin
+   * [query] insert into "user" ("created_by", "created_at", "updated_by", "updated_at", "name", "email") values ('Admin', '2024-11-13T09:48:08.052Z', 'Admin', '2024-11-13T09:48:08.052Z', 'Name-11', 'name11@email.com') returning "id", "version" [took 3 ms, 1 row affected]
+   * [query] savepoint trx8
+   * [query] insert into "order" ("created_by", "created_at", "updated_by", "updated_at", "product_id", "amount") values ('Admin', '2024-11-13T09:48:08.057Z', 'Admin', '2024-11-13T09:48:08.057Z', 'Product-12', -2345.5) returning "id", "version" [took 2 ms]
+   * [query] rollback to savepoint trx8
+   * [query] commit
+   *
+   */
+  async createUserWithOptionalOrderAndPayment(
+    name: string,
+    email: string,
+    productId: string,
+    amount: number
+  ): Promise<User> {
+    return await this.em.transactional(async () => {
+      const user = await this.userService.createUser(name, email);
+      try {
+        await this.createOrderWithPayment(productId, amount);
+      } catch (e) {
+        console.log('error thrown from createOrderWithPayment()', e);
+      }
+      return user;
+    });
+  }
+
   async createUserWithOrderAndPayment_WithSeparateTrx(
     name: string,
     email: string,

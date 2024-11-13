@@ -63,30 +63,25 @@ content-type: application/json
 #---------------------------------------------
 # Transaction 
 #---------------------------------------------
+
 // createOrderWithPayment
-POST http://localhost:3000/api/orders/transactions HTTP/1.1
-content-type: application/json
-
-{
-    "productId": "Product-11",
-    "amount": 2.5
-}
-###
-// createOrderWithPayment
-POST http://localhost:3000/api/orders/transactions HTTP/1.1
-content-type: application/json
-
-{
-    "orderId": 53,
-    "productId": "Product-11",
-    "amount": 122345
-}
-###
-
-// createOrderWithPayment2
 // To make insert of first order+payment pair fail, input 'amount' as > 99999 or as a negative number
 // To make insert of second order+payment pair fail, input 'amount2' as > 99999 or as a negative number
-POST http://localhost:3000/api/orders/transactions2 HTTP/1.1
+POST http://localhost:3000/api/orders/createOrderWithPayment  HTTP/1.1
+content-type: application/json
+
+{
+    
+    "productId": "Product-11",
+    "amount": 99999,
+    "productId2": "Product-12",
+    "amount2": 99999
+}
+###
+// createOrderWithPayments
+// To make insert of first order+payment pair fail, input 'amount' as > 99999 or as a negative number
+// To make insert of second order+payment pair fail, input 'amount2' as > 99999 or as a negative number
+POST http://localhost:3000/api/orders/createOrderWithPayments HTTP/1.1
 content-type: application/json
 
 {
@@ -102,7 +97,7 @@ content-type: application/json
 // To make insert of user 1 fail, input 'email' as a >20 char
 // To make insert of order+payment fail, input 'amount' as a negative number
 // To make insert of user 2 fail, input 'email' as a 0 char
-POST http://localhost:3000/api/users/transactions HTTP/1.1
+POST http://localhost:3000/api/users/createUserWithOrderAndPayment HTTP/1.1
 content-type: application/json
 
 {
@@ -112,6 +107,22 @@ content-type: application/json
     "amount": 2345.5
 }
 ###
+// createUserWithOptionalOrderAndPayment
+// To make insert of user fail, input 'email' as a >20 char or empty
+// To make insert of second order+payment pair fail, input 'amount2' as > 99999 or as a negative number
+
+POST http://localhost:3000/api/users/createUserWithOptionalOrderAndPayment HTTP/1.1
+content-type: application/json
+
+{
+    
+    "name": "Name-11",
+    "email": "name11@email.com",
+    "productId": "Product-12",
+    "amount": 2345.5
+}
+###
+
 
 // createUserWithOrder
 POST http://localhost:3000/api/users/69/orders HTTP/1.1

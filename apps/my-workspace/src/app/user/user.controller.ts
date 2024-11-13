@@ -11,8 +11,8 @@ export class UserController {
     private readonly transactionService: TransactionService
   ) {}
 
-  @Post('transactions')
-  async createTransaction(
+  @Post('createUserWithOrderAndPayment')
+  async createUserWithOrderAndPayment(
     @Body()
     body: {
       name: string;
@@ -28,6 +28,25 @@ export class UserController {
       body.amount
     );
   }
+
+  @Post('createUserWithOptionalOrderAndPayment')
+  async createUserWithOptionalOrderAndPayment(
+    @Body()
+    body: {
+      name: string;
+      email: string;
+      productId: string;
+      amount: number;
+    }
+  ): Promise<User> {
+    return await this.transactionService.createUserWithOptionalOrderAndPayment(
+      body.name,
+      body.email,
+      body.productId,
+      body.amount
+    );
+  }
+
   @Post()
   async create(@Body() body: { name: string; email: string }): Promise<User> {
     return this.userService.createUser(body.name, body.email);

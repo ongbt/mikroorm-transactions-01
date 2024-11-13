@@ -19,8 +19,8 @@ export class OrderController {
       body.amount
     );
   }
-  @Post('transactions')
-  async createTransaction(
+  @Post('createOrderWithPayment')
+  async createOrderWithPayment(
     @Body() body: { productId: string; amount: number }
   ): Promise<Order> {
     return await this.transactionService.createOrderWithPayment(
@@ -28,8 +28,9 @@ export class OrderController {
       body.amount
     );
   }
-  @Post('transactions2')
-  async createTransaction2(
+
+  @Post('createOrderWithPayments')
+  async createOrderWithPayments(
     @Body()
     body: {
       productId: string;
@@ -45,6 +46,7 @@ export class OrderController {
       body.amount2
     );
   }
+
   @Post()
   async create(
     @Body() body: { productId: string; amount: number }
