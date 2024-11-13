@@ -78,15 +78,13 @@ export class TransactionService {
     productId2: string,
     amount2: number
   ): Promise<Order[]> {
-    return await this.em.transactional(
-      async () => {
-        const order1 = await this.createOrderWithPayment(productId, amount);
-        const order2 = await this.createOrderWithPayment(productId2, amount2);
-        return [order1, order2];
-      },
-      { ignoreNestedTransactions: true }
-    );
+    return await this.em.transactional(async () => {
+      const order1 = await this.createOrderWithPayment(productId, amount);
+      const order2 = await this.createOrderWithPayment(productId2, amount2);
+      return [order1, order2];
+    });
   }
+
   /**
    * begin
    * [query] insert into "order" ("created_by", "created_at", "updated_by", "updated_at", "product_id", "amount") values ('Admin', '2024-11-06T01:20:42.034Z', 'Admin', '2024-11-06T01:20:42.034Z', 'Product-11a', 10002.5) returning "id", "version" [took 1 ms, 1 row affected]
