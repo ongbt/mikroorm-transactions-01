@@ -33,6 +33,18 @@ export class UserController {
     return this.userService.createUser(body.name, body.email);
   }
 
+  @Post('users')
+  async createUsers(
+    @Body() body: { name: string; email: string; name2: string; email2: string }
+  ): Promise<User[]> {
+    return this.userService.createUsers(
+      body.name,
+      body.email,
+      body.name2,
+      body.email2
+    );
+  }
+
   @Get()
   async findAll(): Promise<User[]> {
     return this.userService.findAll();

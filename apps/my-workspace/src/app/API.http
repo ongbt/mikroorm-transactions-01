@@ -13,6 +13,16 @@ content-type: application/json
     "email": "name01@email.com"
 }
 ###
+POST http://localhost:3000/api/users/users HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Name-01",
+    "email": "name01@email.com",   
+    "name2": "Name-02",
+    "email2": ""
+}
+###
 
 
 #---------------------------------------------
@@ -73,6 +83,21 @@ content-type: application/json
 }
 ###
 
+// createOrderWithPayment2
+// To make insert of first order+payment pair fail, input 'amount' as > 99999 or as a negative number
+// To make insert of second order+payment pair fail, input 'amount2' as > 99999 or as a negative number
+POST http://localhost:3000/api/orders/transactions2 HTTP/1.1
+content-type: application/json
+
+{
+    
+    "productId": "Product-11",
+    "amount": 99999,
+    "productId2": "Product-12",
+    "amount2": 99999
+}
+###
+
 // createUserWithOrderAndPayment
 // To make insert of user 1 fail, input 'email' as a >20 char
 // To make insert of order+payment fail, input 'amount' as a negative number
@@ -89,11 +114,11 @@ content-type: application/json
 ###
 
 // createUserWithOrder
-POST http://localhost:3000/api/users/71/orders HTTP/1.1
+POST http://localhost:3000/api/users/69/orders HTTP/1.1
 content-type: application/json
 
 { 
-     "productId": "Product-12",
+     "productId": "1",
     "amount": 22345.5
 
 }

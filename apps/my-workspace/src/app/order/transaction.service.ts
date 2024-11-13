@@ -22,8 +22,6 @@ export class TransactionService {
     private readonly orderRepository: OrderRepository
   ) {}
 
-  // Additional methods can be added here for update and delete operations.
-
   async createOrderWithPayment(
     productId: string,
     amount: number
@@ -33,13 +31,62 @@ export class TransactionService {
       const order = await this.orderService.createOrder(productId, amount);
       await this.paymentService.createPayment(amount);
       if (amount > 99999) {
-        await this.em.rollback(); // impt to have 'await', else error 'Transaction query already complete, run with DEBUG=knex:tx'
+        throw new Error(`amount should be greater than 99999, is ${amount}`); // impt to have 'await', else error 'Transaction query already complete, run with DEBUG=knex:tx'
       }
       return order;
     });
-    this.em.flush();
   }
 
+  /**
+   * Notes:
+   * createOrderWithPayment() has a transaction inside
+   * If first or second order+payment fail, all will be rolled back
+   *
+   * If both succeed:
+   * [query] begin
+   * [query] savepoint trx21
+   * [query] insert into "order" ("created_by", "created_at", "updated_by", "updated_at", "product_id", "amount") values ('Admin', '2024-11-13T09:23:20.505Z', 'Admin', '2024-11-13T09:23:20.505Z', 'Product-11', 99999) returning "id", "version" [took 2 ms, 1 row affected]
+   * [query] insert into "payment" ("created_by", "created_at", "updated_by", "updated_at", "amount") values ('Admin', '2024-11-13T09:23:20.507Z', 'Admin', '2024-11-13T09:23:20.507Z', 99999) returning "id", "version" [took 2 ms, 1 row affected]
+   * [query] release savepoint trx21
+   * [query] savepoint trx22
+   * [query] insert into "order" ("created_by", "created_at", "updated_by", "updated_at", "product_id", "amount") values ('Admin', '2024-11-13T09:23:20.512Z', 'Admin', '2024-11-13T09:23:20.512Z', 'Product-12', 99999) returning "id", "version" [took 1 ms, 1 row affected]
+   * [query] insert into "payment" ("created_by", "created_at", "updated_by", "updated_at", "amount") values ('Admin', '2024-11-13T09:23:20.513Z', 'Admin', '2024-11-13T09:23:20.513Z', 99999) returning "id", "version" [took 1 ms, 1 row affected]
+   * [query] release savepoint trx22
+   * [query] commit
+   *
+   * If first order+payment failed
+   * [query] begin
+   * [query] savepoint trx19
+   * [query] insert into "order" ("created_by", "created_at", "updated_by", "updated_at", "product_id", "amount") values ('Admin', '2024-11-13T09:22:37.876Z', 'Admin', '2024-11-13T09:22:37.876Z', 'Product-11', -99999) returning "id", "version" [took 1 ms]
+   * [query] rollback to savepoint trx19
+   * [query] rollback
+   *
+   * If second order+payment failed
+   * [query] begin
+   * [query] savepoint trx16
+   * [query] insert into "order" ("created_by", "created_at", "updated_by", "updated_at", "product_id", "amount") values ('Admin', '2024-11-13T09:20:58.062Z', 'Admin', '2024-11-13T09:20:58.062Z', 'Product-11', 99999) returning "id", "version" [took 2 ms, 1 row affected]
+   * [query] insert into "payment" ("created_by", "created_at", "updated_by", "updated_at", "amount") values ('Admin', '2024-11-13T09:20:58.066Z', 'Admin', '2024-11-13T09:20:58.066Z', 99999) returning "id", "version" [took 1 ms, 1 row affected]
+   * [query] release savepoint trx16
+   * [query] savepoint trx17
+   * [query] insert into "order" ("created_by", "created_at", "updated_by", "updated_at", "product_id", "amount") values ('Admin', '2024-11-13T09:20:58.070Z', 'Admin', '2024-11-13T09:20:58.070Z', 'Product-12', -99999) returning "id", "version" [took 2 ms]
+   * [query] rollback to savepoint trx17
+   * [query] rollback
+   */
+  async createOrderWithPayments(
+    productId: string,
+    amount: number,
+    productId2: string,
+    amount2: number
+  ): Promise<Order[]> {
+    return await this.em.transactional(
+      async () => {
+        const order1 = await this.createOrderWithPayment(productId, amount);
+        const order2 = await this.createOrderWithPayment(productId2, amount2);
+        return [order1, order2];
+      },
+      { ignoreNestedTransactions: true }
+    );
+  }
   /**
    * begin
    * [query] insert into "order" ("created_by", "created_at", "updated_by", "updated_at", "product_id", "amount") values ('Admin', '2024-11-06T01:20:42.034Z', 'Admin', '2024-11-06T01:20:42.034Z', 'Product-11a', 10002.5) returning "id", "version" [took 1 ms, 1 row affected]
@@ -65,7 +112,7 @@ export class TransactionService {
       productId + 'b',
       amount + 10000
     );
-    const order = await this.em.transactional(async (em) => {
+    const order = await this.em.transactional(async () => {
       const order = await this.orderService.createOrder(productId, amount);
       await this.paymentService.createPayment(amount);
 

@@ -13,7 +13,7 @@ export class OrderController {
   async createTransactionWithUpdate_Ignore(
     @Body() body: { orderId: number; productId: string; amount: number }
   ): Promise<Order> {
-    return this.transactionService.createAndUpdateOrderWithPayment(
+    return await this.transactionService.createAndUpdateOrderWithPayment(
       body.orderId,
       body.productId,
       body.amount
@@ -23,9 +23,26 @@ export class OrderController {
   async createTransaction(
     @Body() body: { productId: string; amount: number }
   ): Promise<Order> {
-    return this.transactionService.createOrderWithPayment(
+    return await this.transactionService.createOrderWithPayment(
       body.productId,
       body.amount
+    );
+  }
+  @Post('transactions2')
+  async createTransaction2(
+    @Body()
+    body: {
+      productId: string;
+      amount: number;
+      productId2: string;
+      amount2: number;
+    }
+  ): Promise<Order[]> {
+    return await this.transactionService.createOrderWithPayments(
+      body.productId,
+      body.amount,
+      body.productId2,
+      body.amount2
     );
   }
   @Post()

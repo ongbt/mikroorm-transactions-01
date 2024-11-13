@@ -22,5 +22,21 @@ export class UserService {
     return this.userRepository.findAll();
   }
 
+  /**
+   *
+   */
+  async createUsers(
+    name: string,
+    email: string,
+    name2: string,
+    email2: string
+  ): Promise<User[]> {
+    return await this.em.transactional(async () => {
+      // Use the same entity manager instance for both services
+      const userA = await this.createUser(name, email); // Point A
+      const user = await this.createUser(name2, email2); // Point C
+      return [userA, user];
+    });
+  }
   // Additional methods can be added here for update and delete operations.
 }
