@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Order } from '../entities/order.entity';
 import { User } from '../entities/user.entity';
 import { TransactionService } from '../order/transaction.service';
 import { UserService } from './user.service';
@@ -35,5 +36,21 @@ export class UserController {
   @Get()
   async findAll(): Promise<User[]> {
     return this.userService.findAll();
+  }
+
+  @Post(':id/orders')
+  async updateUserWithOrder(
+    @Param('id') userId: number,
+    @Body()
+    body: {
+      amount: number;
+      productId: string;
+    }
+  ): Promise<Order> {
+    return this.transactionService.updateUserWithOrder(
+      userId,
+      body.productId,
+      body.amount
+    );
   }
 }

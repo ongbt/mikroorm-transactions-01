@@ -18,11 +18,13 @@ content-type: application/json
 #---------------------------------------------
 # Order 
 #---------------------------------------------#
+// get all
 GET http://localhost:3000/api/orders HTTP/1.1
 content-type: application/json
 ###
 
-GET http://localhost:3000/api/orders/186 HTTP/1.1
+// get by Id
+GET http://localhost:3000/api/orders/192 HTTP/1.1
 content-type: application/json
 ###
 
@@ -35,13 +37,16 @@ content-type: application/json
     "amount": 99.5
 }
 ###
+
 // updateOrder
-POST http://localhost:3000/api/orders/186 HTTP/1.1
+// the update code will delay for a few seconds between select and update
+// to similate optimistic lock error, send 2 requests in quick succession, take note to change the 'amount' number each time (to make the entity dirty in order to trigger a update sql)
+POST http://localhost:3000/api/orders/192 HTTP/1.1
 content-type: application/json
 
 {
     "productId": "Product-02",
-    "amount": 32.5
+    "amount": 232.5
 }
 ###
 
@@ -67,14 +72,29 @@ content-type: application/json
     "amount": 122345
 }
 ###
+
 // createUserWithOrderAndPayment
+// To make insert of user 1 fail, input 'email' as a >20 char
+// To make insert of order+payment fail, input 'amount' as a negative number
+// To make insert of user 2 fail, input 'email' as a 0 char
 POST http://localhost:3000/api/users/transactions HTTP/1.1
 content-type: application/json
 
 {
     "name": "Name-11",
-    "email": "name11@email.com",
+    "email": "",
     "productId": "Product-12",
-    "amount": -22345.5
+    "amount": 2345.5
+}
+###
+
+// createUserWithOrder
+POST http://localhost:3000/api/users/71/orders HTTP/1.1
+content-type: application/json
+
+{ 
+     "productId": "Product-12",
+    "amount": 22345.5
+
 }
 ###

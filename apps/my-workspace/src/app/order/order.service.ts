@@ -51,7 +51,7 @@ export class OrderService {
     order.productId = productId;
     order.amount = amount;
     console.log('Start waiting');
-    await this.sleep(1000); // Sleep for 3 seconds
+    await this.sleep(3000); // Sleep for 3 seconds
     console.log('End');
     await this.em.flush();
     return order;
@@ -59,5 +59,6 @@ export class OrderService {
   sleep = (ms: number): Promise<void> => {
     return new Promise((resolve) => setTimeout(resolve, ms));
   };
+
   // Additional methods can be added here for update and delete operations.
 }

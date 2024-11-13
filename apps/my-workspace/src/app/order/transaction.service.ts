@@ -1,9 +1,12 @@
+import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 import { Order } from '../entities/order.entity';
 import { User } from '../entities/user.entity';
 import { PaymentService } from '../payment/payment.service';
+import { UserRepository } from '../user/user.repository';
 import { UserService } from '../user/user.service';
+import { OrderRepository } from './order.repository';
 import { OrderService } from './order.service';
 
 @Injectable()
@@ -12,7 +15,11 @@ export class TransactionService {
     private readonly em: EntityManager,
     private readonly userService: UserService,
     private readonly orderService: OrderService,
-    private readonly paymentService: PaymentService
+    private readonly paymentService: PaymentService,
+    @InjectRepository(User)
+    private readonly userRepository: UserRepository,
+    @InjectRepository(Order)
+    private readonly orderRepository: OrderRepository
   ) {}
 
   // Additional methods can be added here for update and delete operations.
@@ -135,6 +142,34 @@ export class TransactionService {
       const userA = await this.userService.createUser(name + 'a', email + 'a'); // Point A
       const user = await this.userService.createUser(name, email); // Point C
       return user;
+    });
+  }
+
+  /**
+   * [query] select "u0".* from "user" as "u0" where "u0"."id" = '71' limit 1 [took 4 ms, 1 result]
+   * [query] begin
+   * [query] insert into "order" ("created_by", "created_at", "updated_by", "updated_at", "product_id", "amount") values ('Admin', '2024-11-07T08:27:46.134Z', 'Admin', '2024-11-07T08:27:46.134Z', 'Product-12_NEW', 22345.62345) returning "id", "version" [took 2 ms, 1 row affected]
+   * [query] update "user" set "name" = 'Name-11Product-12Product-12Product-12Product-12Product-12', "updated_at" = '2024-11-07T08:27:46.135Z', "version" = "version" + 1 where "id" = 71 and "version" = 5 returning "version" [took 2 ms, 1 row affected]
+   * [query] commit
+   */
+  async updateUserWithOrder(
+    userId: number,
+    productId: string,
+    amount: number
+  ): Promise<Order> {
+    const order1 = await this.orderRepository.create({ productId, amount });
+    await this.em.persist(order1);
+    const user = await this.userRepository.findOneOrFail(userId);
+    user.name += productId;
+
+    return await this.em.transactional(async () => {
+      const newAmount = amount + 0.12345;
+      const newProductId = productId + '_NEW';
+      const order = await this.orderRepository.create({
+        productId: newProductId,
+        amount: newAmount,
+      });
+      return order;
     });
   }
 }
