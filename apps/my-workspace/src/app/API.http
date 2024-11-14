@@ -20,7 +20,7 @@ content-type: application/json
     "name": "Name-01",
     "email": "name01@email.com",   
     "name2": "Name-02",
-    "email2": ""
+    "email2": "name02@email.com"
 }
 ###
 
@@ -34,7 +34,7 @@ content-type: application/json
 ###
 
 // get by Id
-GET http://localhost:3000/api/orders/192 HTTP/1.1
+GET http://localhost:3000/api/orders/345 HTTP/1.1
 content-type: application/json
 ###
 
@@ -51,7 +51,7 @@ content-type: application/json
 // updateOrder
 // the update code will delay for a few seconds between select and update
 // to similate optimistic lock error, send 2 requests in quick succession, take note to change the 'amount' number each time (to make the entity dirty in order to trigger a update sql)
-POST http://localhost:3000/api/orders/192 HTTP/1.1
+POST http://localhost:3000/api/orders/345 HTTP/1.1
 content-type: application/json
 
 {
@@ -78,6 +78,7 @@ content-type: application/json
     "amount2": 99999
 }
 ###
+
 // createOrderWithPayments
 // To make insert of first order+payment pair fail, input 'amount' as > 99999 or as a negative number
 // To make insert of second order+payment pair fail, input 'amount2' as > 99999 or as a negative number
@@ -102,11 +103,12 @@ content-type: application/json
 
 {
     "name": "Name-11",
-    "email": "",
+    "email": "name11@email.com",
     "productId": "Product-12",
     "amount": 2345.5
 }
 ###
+
 // createUserWithOptionalOrderAndPayment
 // To make insert of user fail, input 'email' as a >20 char or empty
 // To make insert of second order+payment pair fail, input 'amount2' as > 99999 or as a negative number
@@ -125,7 +127,7 @@ content-type: application/json
 
 
 // createUserWithOrder
-POST http://localhost:3000/api/users/69/orders HTTP/1.1
+POST http://localhost:3000/api/users/99/orders HTTP/1.1
 content-type: application/json
 
 { 
