@@ -12,6 +12,7 @@
     "@mikro-orm/postgresql": "^6.3.13",
     "@nestjs/common": "^10.0.2",
     "@nestjs/core": "^10.0.2",
+    "@nestjs/event-emitter": "^2.1.1",
     "@nestjs/platform-express": "^10.0.2",
     "axios": "^1.6.0",
     "pg": "^8.13.1",
